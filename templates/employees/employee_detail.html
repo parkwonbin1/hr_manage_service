@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ employee.name }} - 직원 상세정보{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-card {
+        border: none;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+    .info-row {
+        border-bottom: 1px solid #eee;
+        padding: 15px 0;
+    }
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    .info-label {
+        font-weight: 600;
+        color: #495057;
+        min-width: 120px;
+    }
+    .info-value {
+        color: #212529;
+    }
+    .badge-custom {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- 헤더 -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-6">
+                <i class="fas fa-user text-primary me-2"></i>{{ employee.name }}
+            </h1>
+            <p class="text-muted">직원 상세 정보</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'employees:employee_list' %}" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-list me-1"></i>목록으로
+            </a>
+            <a href="{% url 'employees:employee_update' employee.pk %}" class="btn btn-warning me-2">
+                <i class="fas fa-edit me-1"></i>수정
+            </a>
+            <a href="{% url 'employees:employee_delete' employee.pk %}" class="btn btn-danger">
+                <i class="fas fa-trash me-1"></i>삭제
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- 기본 정보 -->
+        <div class="col-md-8">
+            <div class="card detail-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>기본 정보
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-row d-flex">
+                        <span class="info-label">이름:</span>
+                        <span class="info-value flex-grow-1">{{ employee.name }}</span>
+                    </div>
+                    <div class="info-row d-flex">
+                        <span class="info-label">이메일:</span>
+                        <span class="info-value flex-grow-1">
+                            <a href="mailto:{{ employee.email }}" class="text-decoration-none">
+                                {{ employee.email }}
+                            </a>
+                        </span>
+                    </div>
+                    {% if employee.phone %}
+                    <div class="info-row d-flex">
+                        <span class="info-label">전화번호:</span>
+                        <span class="info-value flex-grow-1">
+                            <a href="tel:{{ employee.phone }}" class="text-decoration-none">
+                                {{ employee.phone }}
+                            </a>
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="info-row d-flex">
+                        <span class="info-label">부서:</span>
+                        <span class="info-value flex-grow-1">
+                            <span class="badge bg-primary badge-custom">
+                                {{ employee.get_department_display }}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="info-row d-flex">
+                        <span class="info-label">직급:</span>
+                        <span class="info-value flex-grow-1">
+                            <span class="badge bg-info badge-custom">
+                                {{ employee.get_position_display }}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="info-row d-flex">
+                        <span class="info-label">입사일:</span>
+                        <span class="info-value flex-grow-1">{{ employee.hire_date|date:"Y년 m월 d일" }}</span>
+                    </div>
+                    {% if employee.salary %}
+                    <div class="info-row d-flex">
+                        <span class="info-label">급여:</span>
+                        <span class="info-value flex-grow-1">
+                            {{ employee.salary|floatformat:0 }}원
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="info-row d-flex">
+                        <span class="info-label">재직 상태:</span>
+                        <span class="info-value flex-grow-1">
+                            {% if employee.is_active %}
+                                <span class="badge bg-success badge-custom">재직</span>
+                            {% else %}
+                                <span class="badge bg-danger badge-custom">퇴직</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 추가 정보 -->
+        <div class="col-md-4">
+            <div class="card detail-card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock me-2"></i>시스템 정보
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="info-row d-flex">
+                        <span class="info-label">생성일:</span>
+                        <span class="info-value">{{ employee.created_at|date:"Y.m.d H:i" }}</span>
+                    </div>
+                    <div class="info-row d-flex">
+                        <span class="info-label">수정일:</span>
+                        <span class="info-value">{{ employee.updated_at|date:"Y.m.d H:i" }}</span>
+                    </div>
+                    <div class="info-row d-flex">
+                        <span class="info-label">근무 기간:</span>
+                        <span class="info-value">
+                            {% now "Y-m-d" as today %}
+                            {% with today|date:"Y-m-d" as current_date %}
+                                {% with employee.hire_date|date:"Y-m-d" as hire_date %}
+                                    {{ hire_date|timesince:current_date }}
+                                {% endwith %}
+                            {% endwith %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 액션 버튼 -->
+            <div class="card detail-card mt-3">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>관리
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'employees:employee_update' employee.pk %}" 
+                           class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i>정보 수정
+                        </a>
+                        <a href="{% url 'employees:employee_delete' employee.pk %}" 
+                           class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>직원 삭제
+                        </a>
+                        <a href="{% url 'employees:employee_list' %}" 
+                           class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-2"></i>목록으로 돌아가기
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
