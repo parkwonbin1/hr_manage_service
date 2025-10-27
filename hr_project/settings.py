@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-aj!(ftm300k*^u_(*o=)!j^_oe%i9+w@xg=vr=78qscy2nqs&i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.10.20']
 
 
 # Application definition
@@ -78,9 +78,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 이렇게 변경!
         'NAME': 'hr_manage_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'USER': 'hr_user',
+        'PASSWORD': 'centos',
+        'HOST': '192.168.10.30',
         'PORT': '3306',
     }
 }
