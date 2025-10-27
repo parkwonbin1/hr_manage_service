@@ -35,6 +35,10 @@ class EmployeeForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': '급여를 입력하세요'
             }),
+            # ▼ 'profile_photo' 위젯 추가
+            'profile_photo': forms.ClearableFileInput(attrs={
+                'class': 'form-control'
+            }),
         }
         labels = {
             'name': '이름',
@@ -44,6 +48,7 @@ class EmployeeForm(forms.ModelForm):
             'position': '직급',
             'hire_date': '입사일',
             'salary': '급여',
+            'profile_photo': '증명사진', # 'profile_photo' 레이블 추가
         }
     
     def __init__(self, *args, **kwargs):

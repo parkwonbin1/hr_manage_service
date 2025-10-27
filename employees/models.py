@@ -49,6 +49,15 @@ class Employee(models.Model):
         blank=True
     )
     is_active = models.BooleanField(default=True, verbose_name='재직 상태')
+
+    # Object Storage (MinIO) 연동 필드
+    profile_photo = models.ImageField(
+        upload_to='photos/',  # MinIO 버킷 내의 'photos' 폴더에 저장
+        blank=True, 
+        null=True,
+        verbose_name="증명사진"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='생성일')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
     

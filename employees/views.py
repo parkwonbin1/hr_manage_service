@@ -49,7 +49,7 @@ def employee_detail(request, pk):
 def employee_create(request):
     """직원 추가"""
     if request.method == 'POST':
-        form = EmployeeForm(request.POST)
+        form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
             employee = form.save()
             messages.success(request, f'{employee.name} 직원이 성공적으로 추가되었습니다.')
@@ -66,7 +66,7 @@ def employee_update(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     
     if request.method == 'POST':
-        form = EmployeeForm(request.POST, instance=employee)
+        form = EmployeeForm(request.POST, request.FILES,instance=employee)
         if form.is_valid():
             employee = form.save()
             messages.success(request, f'{employee.name} 직원 정보가 성공적으로 수정되었습니다.')

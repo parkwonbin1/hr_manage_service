@@ -130,3 +130,25 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ------------------------------------
+# 2. Object Storage (MinIO) 설정
+# (이름은 AWS_지만, 내용은 MinIO 서버 정보입니다)
+# ------------------------------------
+
+# Django의 기본 파일 저장소를 MinIO로 변경
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# MinIO(S3 호환) 접속 정보
+AWS_ACCESS_KEY_ID = 'minio_admin'
+AWS_SECRET_ACCESS_KEY = 'soldesk1.' # MinIO 접속 PW (설정한 값)
+AWS_STORAGE_BUCKET_NAME = 'hr-files'             # MinIO 버킷 이름
+
+# (가장 중요) MinIO 서버 주소 지정
+AWS_S3_ENDPOINT_URL = 'http://192.168.10.10:9000'
+
+# 기타 S3 호환 설정
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_REGION_NAME = 'us-east-1' # MinIO는 리전이 무의미하지만, 값은 필요
+AWS_S3_FILE_OVERWRITE = False    # 덮어쓰기 방지
+AWS_DEFAULT_ACL = None           # 버킷 정책(읽기전용)을 따름
